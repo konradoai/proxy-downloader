@@ -8,8 +8,8 @@ export PATH="/usr/local/bin:$PATH"
 #       --api-key=<konrado_api_key> \
 #       --callback-url=<https://app.konrado.ai/api/integrations/servers/install>
 #
-# Or via custom domain (if configured):
-#   bash <(curl -s https://repo.konrado.ai/init.sh) \
+# Or via custom domain:
+#   bash <(curl -s https://repo.konrado.ai/proxy-downloader/init.sh) \
 #       --api-key=<konrado_api_key> \
 #       --callback-url=<https://app.konrado.ai/api/integrations/servers/install>
 #
@@ -104,7 +104,7 @@ if [[ -z "$API_KEY" || -z "$CALLBACK_URL" ]]; then
     echo "Error: --api-key and --callback-url are required."
     echo ""
     echo "Usage:"
-    echo "  bash <(curl -s https://repo.konrado.ai/init.sh) \\"
+    echo "  bash <(curl -s https://repo.konrado.ai/proxy-downloader/init.sh) \\"
     echo "      --api-key=<konrado_api_key> \\"
     echo "      --callback-url=<https://app.konrado.ai/api/integrations/servers/install>"
     exit 1

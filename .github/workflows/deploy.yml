@@ -1,0 +1,43 @@
+name: Deploy init script
+
+on:
+  workflow_dispatch:
+  push:
+    tags:
+      - '*.*.*'
+
+permissions:
+  contents: read
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    env:
+      SSH_HOST: repo.konrado.ai
+      SSH_USER: storage
+      SSH_PORT: 22
+      TARGET_DIR: /var/www/html/proxy-downloader
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup SSH key
+        env:
+          STORAGE_SSH_KEY: ${{ secrets.STORAGE_SSH_KEY }}
+        run: |
+          test -n "$STORAGE_SSH_KEY"
+          mkdir -p ~/.ssh
+          printf '%s\n' "$STORAGE_SSH_KEY" > ~/.ssh/id_ed25519
+          chmod 600 ~/.ssh/id_ed25519
+
+      - name: Add host to known_hosts
+        run: |
+          ssh-keyscan -p "$SSH_PORT" "$SSH_HOST" >> ~/.ssh/known_hosts
+
+      - name: Upload init.sh
+        run: |
+          ssh -i ~/.ssh/id_ed25519 -p "$SSH_PORT" "$SSH_USER@$SSH_HOST" "mkdir -p '$TARGET_DIR'"
+          scp -i ~/.ssh/id_ed25519 -P "$SSH_PORT" init.sh "$SSH_USER@$SSH_HOST:$TARGET_DIR/init.sh"
+          ssh -i ~/.ssh/id_ed25519 -p "$SSH_PORT" "$SSH_USER@$SSH_HOST" "chmod 644 '$TARGET_DIR/init.sh'"
