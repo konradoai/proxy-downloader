@@ -17,7 +17,7 @@ jobs:
       SSH_HOST: repo.konrado.ai
       SSH_USER: storage
       SSH_PORT: 22
-      TARGET_DIR: /var/www/html/proxy-downloader
+      TARGET_DIR: /var/www/html/remote-agent
 
     steps:
       - name: Checkout code
